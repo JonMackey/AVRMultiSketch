@@ -152,6 +152,5 @@
             </subviews>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ALN-Jw-bjR"/>
-        <customObject id="Hrl-EO-Ds0" customClass="HexNumberFormatter"/>
     </objects>
 </document>

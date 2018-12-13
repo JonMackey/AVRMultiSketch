@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA09C2A621B0B2D800056BD1 /* HexNumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA09C2A521B0B2D800056BD1 /* HexNumberFormatter.m */; };
 		DA133A1E2192063B0037B8AE /* AVRMultiSketchLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA133A1C2192063B0037B8AE /* AVRMultiSketchLogViewController.m */; };
 		DA133A1F2192063B0037B8AE /* AVRMultiSketchLogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DA133A1D2192063B0037B8AE /* AVRMultiSketchLogViewController.xib */; };
 		DA2E483F21A34DC900F127F5 /* ConfigurationFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA2E483D21A34DC900F127F5 /* ConfigurationFile.cpp */; };
@@ -45,8 +44,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DA09C2A421B0B2D700056BD1 /* HexNumberFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HexNumberFormatter.h; sourceTree = "<group>"; };
-		DA09C2A521B0B2D800056BD1 /* HexNumberFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HexNumberFormatter.m; sourceTree = "<group>"; };
 		DA133A1B2192063B0037B8AE /* AVRMultiSketchLogViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVRMultiSketchLogViewController.h; sourceTree = "<group>"; };
 		DA133A1C2192063B0037B8AE /* AVRMultiSketchLogViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVRMultiSketchLogViewController.m; sourceTree = "<group>"; };
 		DA133A1D2192063B0037B8AE /* AVRMultiSketchLogViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AVRMultiSketchLogViewController.xib; sourceTree = "<group>"; };
@@ -126,8 +123,6 @@
 				DA98631A218D0377009A8B6D /* MainWindowController.h */,
 				DA98631B218D0377009A8B6D /* MainWindowController.mm */,
 				DA98631C218D0377009A8B6D /* MainWindowController.xib */,
-				DA09C2A421B0B2D700056BD1 /* HexNumberFormatter.h */,
-				DA09C2A521B0B2D800056BD1 /* HexNumberFormatter.m */,
 				DA98630F218D00CD009A8B6D /* Info.plist */,
 				DA986310218D00CD009A8B6D /* main.m */,
 				DA98633A218D07AE009A8B6D /* ElfFile.cpp */,
@@ -252,7 +247,6 @@
 				DA57D1E821A477A000240A25 /* FileInputBuffer.cpp in Sources */,
 				DA57D1E721A477A000240A25 /* JSONElement.cpp in Sources */,
 				DA2E483F21A34DC900F127F5 /* ConfigurationFile.cpp in Sources */,
-				DA09C2A621B0B2D800056BD1 /* HexNumberFormatter.m in Sources */,
 				DA986311218D00CD009A8B6D /* main.m in Sources */,
 				DA98632A218D03FB009A8B6D /* Tabs.mm in Sources */,
 				DA98633C218D07AE009A8B6D /* ElfFile.cpp in Sources */,
