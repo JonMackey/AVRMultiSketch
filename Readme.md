@@ -66,7 +66,7 @@ This board currently hosts 3 sketches plus the Forwarder and Selector sketches:
 - AVR_HighVoltageSerialProgrammer, a version of the work by Paul Willoughby that I modified to make it somewhat more user friendly.
 - HexCopier, a sketch I wrote to quickly load NOR Flash chips from a FAT image file on an SD card.  See <a href="https://github.com/JonMackey/FatFsToHex" name="FatFsToHex" title="OS X app used to create a FAT file system to be sent serially in Intel HEX format to any compatible interpreter or exported to a .hex file">FatFsToHex</a>.
 
-There are two versions of the board, one with an ATmega328<i>pb</i> and one with an ATmega644p (or 1284P).  The reason for the version with a higher capacity chip is simply that I was placing an order with PCBWay in China anyway and wanted to try the 644a and 1284P chips.
+There are two variants of the board, one with an ATmega328<i>pb</i> and one with an ATmega644p (or 1284P).  The reason for the variant with a higher capacity chip is simply that I was placing an order with PCBWay in China anyway and wanted to try the 644a and 1284P chips.
 
 The board has 4 buttons: reset, plus buttons 0, 1, and 2.  On reset, if 0, 1, or 2 is held down, it selects a function/sketch.  Currently there are only 3 functions, but there could be as many as 7 if the 3 bits represented by the buttons are used together (or more if a keypad is attached).
 
@@ -79,10 +79,17 @@ Adapter boards:
 
 Most of the boards I design don't require an adapter and the chips can be programmed in place, but for breadboarding the adapters are handy (load the chip on the adapter then move it to the breadboard).
 
-The board also has the option of adding an AT24Cxxx I2C serial EEPROM and there's a 5 pin I2C JST-XH-05 connector (GND/5V/SCL/SDA/INT1) for adding a display and/or other I2C devices. For both board versions I brought all of the unused pins to the edge so the board could be repurposed if needed.  The reason for the serial EEPROM is that I've been using these chips to store bitmap fonts.  I wrote a MacOS app that leverages FreeType to create bitmap subset fonts for use with Arduino displays (this app also will generate the bitmaps to support the Nokia format).  If anyone is interested in the font app or the board, let me know.  If you'd like to build one yourself, the board Gerber files are shared on PCBWay along with a parts list, see <a href="https://www.pcbway.com/project/shareproject/W169964ASC20_AVR_High_Voltage_v1_3.html" name="ATmega328pb" title="AVR Programmer w/HV">ATmega328pb</a> and/or <a href="https://www.pcbway.com/project/shareproject/AVR_High_Voltage_644PA_v1_0.html" name="ATmega644pa" title="AVR Programmer w/HV">ATmega644pa</a> versions.
+The board also has the option of adding an AT24Cxxx I2C serial EEPROM and there's a 5 pin I2C JST-XH-05 connector (GND/5V/SCL/SDA/INT1) for adding a display and/or other I2C devices. For both board versions I brought all of the unused pins to the edge so the board could be repurposed if needed.  The reason for the serial EEPROM is that I've been using these chips to store bitmap fonts.  If anyone is interested in the font app or the board, let me know.  If you'd like to build one yourself, the previous version, <b>v1.3</b> Gerber files are shared on PCBWay along with a parts list, see <a href="https://www.pcbway.com/project/shareproject/W169964ASC20_AVR_High_Voltage_v1_3.html" name="ATmega328pb" title="AVR Programmer w/HV">ATmega328pb</a> and/or <a href="https://www.pcbway.com/project/shareproject/AVR_High_Voltage_644PA_v1_0.html" name="ATmega644pa" title="AVR Programmer w/HV">ATmega644pa</a> versions.
 
+I haven't shared the latest version <b>v1.4</b> on PCBWay.
+
+Instructions for assembling the board and loading the MultiSketch hex file is available on <a href="https://www.instructables.com/id/AVR-Programmer-WHigh-Voltage/" name="Instructables" title="AVR Programmer w/HV">Instructables</a>.
+
+Latest version <b>v1.4</b>:
+![Image](AVRProgrammer328pb_v1_4.jpg)
+
+Previous version <b>v1.3</b>:
 ![Image](AVRProgrammer328pb.jpg)
 ![Image](AVRProgrammer644pa.jpg)
-
 
 
