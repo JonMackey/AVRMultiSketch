@@ -79,7 +79,7 @@
 #define GreenSD_Pin		21	// SD Card Green LED
 #define RedICSP_Pin		22	// ISCP out, Red LED
 #define GreenICSP_Pin	23	// ICSP out, Green LED
-#elif defined __AVR_ATmega644P__
+#elif defined __AVR_ATmega644P__ || defined __AVR_ATmega1284P__
 #define ButtonReg		PINA
 #define Sketch2BtnPin	24	// A0
 #define Sketch1BtnPin	25	// A1
@@ -103,7 +103,7 @@ void setup(void)
 	pinMode(Sketch0BtnPin, INPUT_PULLUP);
 	pinMode(Sketch1BtnPin, INPUT_PULLUP);
 	pinMode(Sketch2BtnPin, INPUT_PULLUP);
-#if defined __AVR_ATmega328PB__ || defined __AVR_ATmega644P__
+#if defined __AVR_ATmega328PB__ || defined __AVR_ATmega644P__ || defined __AVR_ATmega1284P__
 	pinMode(GreenSD_Pin, OUTPUT);
 	pinMode(RedSD_Pin, OUTPUT);
 	pinMode(GreenICSP_Pin, OUTPUT);
@@ -113,6 +113,10 @@ void setup(void)
 	// Because the initial value of an EEPROM byte is 0xFF, 1 is added to
 	// get the initial default of zero.
 	uint8_t sketchIndex = EEPROM.read(SKETCH_INDEX_EEPROM_ADDR) + 1;
+#if 0
+							// 7 = bits 0:2
+	uint8_t	buttonPressed = ((~ButtonReg) & 7) - 1;
+#else
 	uint8_t	buttonPressed = 0xFF;
 	switch (ButtonReg & 7) // bits 0:2
 	{
@@ -126,6 +130,7 @@ void setup(void)
 			buttonPressed = 0;
 			break;
 	}
+#endif
 	if (buttonPressed < 3)
 	{
 		if (buttonPressed != sketchIndex)
@@ -134,7 +139,23 @@ void setup(void)
 			EEPROM.write(SKETCH_INDEX_EEPROM_ADDR, sketchIndex - 1);
 		}
 	}
-#if defined __AVR_ATmega328PB__ || defined __AVR_ATmega644P__
+#if defined __AVR_ATmega328PB__ || defined __AVR_ATmega644P__ || defined __AVR_ATmega1284P__
+	/*buttonPressed = (~(sketchIndex + 1) & 7);
+	if (!(buttonPressed & 1))
+	{
+		digitalWrite(Sketch0BtnPin, 0);
+		pinMode(Sketch0BtnPin, OUTPUT);
+	}
+	if (!(buttonPressed & 2))
+	{
+		digitalWrite(Sketch1BtnPin, 0);
+		pinMode(Sketch1BtnPin, OUTPUT);
+	}
+	if (!(buttonPressed & 4))
+	{
+		digitalWrite(Sketch2BtnPin, 0);
+		pinMode(Sketch2BtnPin, OUTPUT);
+	}*/
 	switch (sketchIndex)
 	{
 		case 0:	// Arduino as ISP sketch
@@ -143,11 +164,15 @@ void setup(void)
 			digitalWrite(GreenSD_Pin, 1);
 			digitalWrite(RedSD_Pin, 1);
 			digitalWrite(RedICSP_Pin, 1);
+			digitalWrite(Sketch0BtnPin, 0);	// <<< Do NOT set this high, you'll damage the mcu
+			pinMode(Sketch0BtnPin, OUTPUT);
 			break;
 		case 1: // AVR High Voltage sketch
 			// Turn both red LEDs on
 			digitalWrite(GreenICSP_Pin, 1);
 			digitalWrite(GreenSD_Pin, 1);
+			digitalWrite(Sketch1BtnPin, 0);	// <<< Do NOT set this high, you'll damage the mcu
+			pinMode(Sketch1BtnPin, OUTPUT);
 			break;
 		case 2:	// Hex copier sketch (copies from SD to ICSP for NOR Flash chips)
 			// Turn all LEDs off
@@ -155,8 +180,11 @@ void setup(void)
 			digitalWrite(GreenICSP_Pin, 1);
 			digitalWrite(RedSD_Pin, 1);
 			digitalWrite(GreenSD_Pin, 1);
+			digitalWrite(Sketch2BtnPin, 0);	// <<< Do NOT set this high, you'll damage the mcu
+			pinMode(Sketch2BtnPin, OUTPUT);
 			break;
 	}
+
 #endif
 	/*
 	*	The code below must be maintained as-is.
