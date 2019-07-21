@@ -44,7 +44,7 @@
 */
 #include <SPI.h>
 
-#ifdef __AVR_ATmega644P__
+#if defined __AVR_ATmega644P__ || defined __AVR_ATmega1284P__
 const uint8_t SdChipSelect = 3;
 #else
 // ATmega328p or pb
@@ -55,8 +55,7 @@ const uint8_t NORFlashChipSelect = SS;
 #include <SdFat.h>
 #include "SPIMem.h"
 
-Sd2Card card;
-SdVolume vol;
+SdFat sd;
 SPIMem norFlash(NORFlashChipSelect);
 #define BAUD_RATE	19200
 
@@ -93,7 +92,7 @@ static uint8_t	sBuffer[kBlockSize];
 static bool		sVerifyAfterWrite = true;
 static bool		sEraseBeforeWrite;
 static uint32_t	sCurrent64KBlk;
-#ifdef __AVR_ATmega644P__
+#if defined __AVR_ATmega644P__ || defined __AVR_ATmega1284P__
 const uint32_t	kHexFileBufferSize = 512;
 #else
 const uint32_t	kHexFileBufferSize = 128;
@@ -146,13 +145,18 @@ void DumpJDECInfo(void)
 void setup(void)
 {
 	Serial.begin(BAUD_RATE);
-	if (card.init(SPI_FULL_SPEED, SdChipSelect) &&
-		vol.init(&card))
+	// Wait for USB Serial 
+	while (!Serial)
+	{
+		SysCall::yield();
+	}
+	if (sd.begin(SdChipSelect))
 	{
 		Serial.println(F("SD card initialized."));
 	} else
 	{
 		Serial.println(F("SD card not initialized."));
+		sd.initErrorHalt();
 	}
 	norFlash.begin();
 	DumpJDECInfo();
@@ -168,19 +172,7 @@ void loop()
 		{
 			sEraseBeforeWrite = true;
 			sCurrent64KBlk = 0xF0000000;
-			bool	success = false;
-			{
-				SdFile	root;
-				if (root.openRoot(&vol))
-				{
-					success = hexFile.open(&root, "/FLASH.HEX", O_READ);
-					root.close();
-				} else
-				{
-					Serial.println(F("Unable to open the root folder."));
-				}
-			
-			}
+			bool	success = hexFile.open("FLASH.HEX", O_READ);
 			if (success)
 			{
 				Serial.print(F("Hex file opened, size = "));
