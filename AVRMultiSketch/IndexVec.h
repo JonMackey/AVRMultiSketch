@@ -194,7 +194,7 @@ public:
 	*/
 
 							IndexVecIterator(
-								const IndexVec*			inIndexVec,
+								const IndexVec*			inIndexVec = NULL,
 								bool					inWrap = false);
 							~IndexVecIterator(void){}
 

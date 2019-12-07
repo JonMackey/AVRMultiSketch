@@ -217,7 +217,7 @@ uint32_t IndexVec::GetNthIndex(
 /*
 *	Returns the index of the run that contains inPosition
 */
-size_t IndexVec::GetRunIndex(
+size_t  IndexVec::GetRunIndex(
 	uint32_t	inPosition,
 	size_t		inStartFrom) const
 {
