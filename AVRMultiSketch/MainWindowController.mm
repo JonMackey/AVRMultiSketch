@@ -1025,9 +1025,11 @@ typedef std::vector<uint16_t> Uint16Vec;
 											case 1:	// Selector Sketch
 											{
 												const SSymbolTblEntry*	symTableEntry = NULL;
-												if (!elfFile.GetSymbolValuePtr("_ZL23forwarderCurrSketchAddr", &symTableEntry) ||
+												// was _ZL23forwarderCurrSketchAddr pre Catalina, Arduino 1.8.10
+												// was _ZL16subSketchAddress
+												if (!elfFile.GetSymbolValuePtr("forwarderCurrSketchAddr", &symTableEntry) ||
 													!elfFile.GetSymbolValuePtr("forwarderRestartPlaceholder", &symTableEntry) ||
-													!elfFile.GetSymbolValuePtr("_ZL16subSketchAddress", &symTableEntry))
+													!elfFile.GetSymbolValuePtr("subSketchAddress", &symTableEntry))
 												{
 													[self->_multiAppLogViewController postErrorString: [NSString stringWithFormat:
 														@"The second sketch in the list must be the Selector sketch, %@ is not a Selector.\n"
@@ -1181,7 +1183,7 @@ typedef std::vector<uint16_t> Uint16Vec;
 										{
 											if (sketchIndex == 1)
 											{
-												elfOffset = (uint16_t*)elfFile.GetSymbolValuePtr("_ZL23forwarderCurrSketchAddr", &symTableEntry);
+												elfOffset = (uint16_t*)elfFile.GetSymbolValuePtr("forwarderCurrSketchAddr", &symTableEntry);
 												if (elfOffset)
 												{
 													*elfOffset = currSketchAddress;
@@ -1189,7 +1191,7 @@ typedef std::vector<uint16_t> Uint16Vec;
 												{
 													success = NO;
 												}
-												elfOffset = (uint16_t*)elfFile.GetSymbolValuePtr("_ZL16subSketchAddress", &symTableEntry);
+												elfOffset = (uint16_t*)elfFile.GetSymbolValuePtr("subSketchAddress", &symTableEntry);
 												if (elfOffset &&
 													subSketchOffsets.size() > 2 &&
 													symTableEntry->size >= ((subSketchOffsets.size()-2)*2))

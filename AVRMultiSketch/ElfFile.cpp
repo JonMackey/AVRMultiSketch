@@ -173,7 +173,7 @@ uint8_t* ElfFile::GetSymbolValuePtr(
 
 	for (; symbolTable < symbolTableEnd; symbolTable++)
 	{
-		//fprintf(stderr, "%s = %d\n", &stringTable[symbolTable[k].name], symbolTable[k].shndx);
+		//fprintf(stderr, "%s = %d\n", &stringTable[symbolTable->name], symbolTable->shndx);
 		if (strcmp(inSymbolName, &stringTable[symbolTable->name]) != 0)
 		{
 			continue;
