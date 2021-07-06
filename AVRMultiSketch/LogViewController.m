@@ -15,12 +15,13 @@
  
 	Licence can be viewed at
 	http://www.gnu.org/licenses/gpl-3.0.txt
-
+//
 	Please maintain this license information along with authorship
 	and copyright notices in any redistribution of this code
 *******************************************************************************/
 //
 //  LogViewController.m
+//  FatFsToHex
 //
 //  Created by Jon Mackey on 1/3/18.
 //  Copyright © 2018 Jon Mackey. All rights reserved.
@@ -95,7 +96,7 @@
 */
 - (LogViewController*)postErrorString:(NSString*)inString
 {
-	[[[[[[self setColor:self.redColor] appendString:@"Error:"] setColor:self.blackColor] appendFormat:@"   %@", inString] appendNewLine] post];
+	[[[[[[[[self setColor:self.redColor] appendString:@"["] appendDate] appendString:@"] Error:"] setColor:self.blackColor] appendFormat:@"   %@", inString] appendNewLine] post];
 	return(self);
 }
 
@@ -106,7 +107,7 @@
 */
 - (LogViewController*)postWarningString:(NSString*)inString
 {
-	[[[[[[self setColor:self.yellowColor] appendString:@"Warning:"] setColor:self.blackColor] appendFormat:@"   %@", inString] appendNewLine] post];
+	[[[[[[[[self setColor:self.yellowColor] appendString:@"["] appendDate] appendString:@"] Warning:"] setColor:self.blackColor] appendFormat:@"   %@", inString] appendNewLine] post];
 	return(self);
 }
 
@@ -116,6 +117,17 @@
 *	<happy face> [date] %@\n
 */
 - (LogViewController*)postInfoString:(NSString*)inString
+{
+	[[[[[[[[self setColor:self.greenColor] appendString:@"["] appendDate] appendString:@"]"] setColor:self.blackColor] appendFormat:@"   %@", inString] appendNewLine] post];
+	return(self);
+}
+
+/********************************* postString *********************************/
+/*
+*	Immediately post a time stamped error string to the log of the form:
+*	<happy face> [date] %@\n
+*/
+- (LogViewController*)postString:(NSString*)inString
 {
 	[[[self appendString:inString] appendNewLine] post];
 	return(self);
@@ -135,6 +147,20 @@
 		// See https://stackoverflow.com/questions/21396034/nstextview-setneedsdisplay-not-working-under-mavericks
 		[self.receivedDataTextView setSelectedRange:endRange];
 		[self.receivedDataTextView scrollRangeToVisible:endRange];
+		[self.receivedDataTextView setNeedsDisplay:YES];
+		[self flush];
+	}
+	return(self);
+}
+
+/***************************** postWithoutScroll ******************************/
+- (LogViewController*)postWithoutScroll
+{
+	if ([self.logText length] > 0)
+	{
+		[self setParaStyle:NULL];
+		[self setColor:NULL];
+		[self.receivedDataTextView.textStorage appendAttributedString:self.logText];
 		[self.receivedDataTextView setNeedsDisplay:YES];
 		[self flush];
 	}
@@ -487,6 +513,123 @@
 		return(YES);
 	}
 	return(NO);
+}
+
+/******************************* appendDataDump *******************************/
+/*
+*	unit:
+*	 00	0 - uint8	FF	FF	FF...
+*	 01	1 - int8	-1	-1	-1...
+*	 10	2 - uint16	FFFF FFFF FFFF...
+*	 11	3 - int16	-1	 -1	  -1...
+*	100	4 - uint32	FFFFFFFF FFFFFFFF FFFFFFFF...
+*	101	5 - int32	-1	     -1	      -1...
+*/
+- (LogViewController*)appendDataDump:(const void*)inBuffer length:(NSUInteger)inLength startAddress:(NSInteger)inStartAddress unit:(uint8_t)inUnit
+{
+	if (inUnit > 1 &&
+		(inLength & 1) != 0)
+	{
+		inUnit = inUnit & 1;
+	} else if (inUnit > 3 &&
+		(inLength & 2) != 0)
+	{
+		inUnit = inUnit & 3;
+	}
+	switch (inUnit)
+	{
+		case 0:
+		{
+			const uint8_t*	bufferPtr = (const uint8_t*)inBuffer;
+			int32_t index = 0;
+			while (index < inLength)
+			{
+				if ((index % 16) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %02hhX", bufferPtr[index++]];
+			}
+			break;
+		}
+		case 1:
+		{
+			const int8_t*	bufferPtr = (const int8_t*)inBuffer;
+			int32_t index = 0;
+			while (index < inLength)
+			{
+				if ((index % 16) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %hhd", bufferPtr[index++]];
+			}
+			break;
+		}
+		case 2:
+		{
+			const uint16_t*	bufferPtr = (const uint16_t*)inBuffer;
+			int32_t index = 0;
+			inLength >>= 1;
+			while (index < inLength)
+			{
+				if ((index % 8) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %04hX", bufferPtr[index++]];
+			}
+			break;
+		}
+		case 3:
+		{
+			const int16_t*	bufferPtr = (const int16_t*)inBuffer;
+			int32_t index = 0;
+			inLength >>= 1;
+			while (index < inLength)
+			{
+				if ((index % 8) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %hd", bufferPtr[index++]];
+			}
+			break;
+		}
+		case 4:
+		{
+			const uint32_t*	bufferPtr = (const uint32_t*)inBuffer;
+			int32_t index = 0;
+			inLength >>= 2;
+			while (index < inLength)
+			{
+				if ((index % 4) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %08X", bufferPtr[index++]];
+			}
+			break;
+		}
+		case 5:
+		{
+			const int32_t*	bufferPtr = (const int32_t*)inBuffer;
+			int32_t index = 0;
+			inLength >>= 2;
+			while (index < inLength)
+			{
+				if ((index % 4) == 0)
+				{
+					[self appendFormat:@"\n%04lX:", inStartAddress + index];
+				}
+				[self appendFormat:@" %d", bufferPtr[index++]];
+			}
+			break;
+		}
+	}
+	[self appendFormat:@"\n\n"];
+	
+	return(self);
 }
 
 /***************************** appendHexDump **********************************/
